@@ -29,8 +29,6 @@ export const Cast = () => {
   if (!actors) {
     return null;
   }
-  const {} = actors;
-
   return (
     <ul>
       {actors.map(({ id, profile_path, name, character }) => {
