@@ -2,8 +2,10 @@ import { useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import * as API from 'components/FetchApi';
 import { useState } from 'react';
+import { toast } from 'react-toastify';
+import { notificationParams } from '../../settings/settings';
 
-export const Reviews = () => {
+const Reviews = () => {
   const { movieId } = useParams();
   const [coments, setcoments] = useState(null);
 
@@ -15,6 +17,9 @@ export const Reviews = () => {
         setcoments(data.results);
       } catch (error) {
         console.log(error);
+        toast.error(`${error.message}. Try again.`, {
+          notificationParams,
+        });
       }
     };
     fetchMovieDetails();
@@ -37,3 +42,5 @@ export const Reviews = () => {
     </ul>
   );
 };
+
+export default Reviews;

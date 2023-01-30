@@ -3,8 +3,10 @@ import { Link, Outlet, useLocation, useParams } from 'react-router-dom';
 import * as API from 'components/FetchApi';
 import { useState } from 'react';
 import imgNotFound from '../../images/imgNotFound.png';
+import { toast } from 'react-toastify';
+import { notificationParams } from '../../settings/settings';
 
-export const MovieDetails = () => {
+const MovieDetails = () => {
   const [movie, setMovie] = useState(null);
   const { movieId } = useParams();
   const location = useLocation();
@@ -16,7 +18,10 @@ export const MovieDetails = () => {
         const data = await API.getMovieDetails(movieId);
         setMovie(data);
       } catch (error) {
-        console.log(error);
+        console.log(error)
+        toast.error(`${error.message}. Try again.`, {
+          notificationParams,
+        });
       }
     };
     fetchTrendingMovies();
@@ -84,3 +89,5 @@ export const MovieDetails = () => {
     </main>
   );
 };
+
+export default MovieDetails;

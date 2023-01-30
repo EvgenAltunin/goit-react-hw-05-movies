@@ -3,8 +3,10 @@ import { useParams } from 'react-router-dom';
 import * as API from 'components/FetchApi';
 import { useState } from 'react';
 import actorImgNotFound from '../../images/actorImgNotFound.png';
+import { toast } from 'react-toastify';
+import { notificationParams } from '../../settings/settings';
 
-export const Cast = () => {
+const Cast = () => {
   const { movieId } = useParams();
   const [actors, setActors] = useState(null);
 
@@ -16,6 +18,9 @@ export const Cast = () => {
         setActors(data.cast);
       } catch (error) {
         console.log(error);
+        toast.error(`${error.message}. Try again.`, {
+          notificationParams,
+        });
       }
     };
     fetchMovieDetails();
@@ -45,3 +50,5 @@ export const Cast = () => {
     </ul>
   );
 };
+
+export default Cast

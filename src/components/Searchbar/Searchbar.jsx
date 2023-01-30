@@ -9,8 +9,7 @@ import {
   Input,
 } from 'components/Searchbar/Searchbar.styled';
 
-
-export function Searchbar({ onFormSubmit }) {
+const Searchbar = ({onFormSubmit}) => {
   const [value, setValue] = useState('');
 
   const handleInputValueChange = event => {
@@ -47,4 +46,6 @@ export function Searchbar({ onFormSubmit }) {
       </Form>
     </Search>
   );
-}
+};
+
+export default Searchbar;
