@@ -1,42 +1,46 @@
 import { useEffect } from 'react';
-import { Link, Outlet, useParams } from 'react-router-dom';
-import axios from 'axios';
+import { Link, Outlet, useLocation, useParams } from 'react-router-dom';
+import * as API from 'components/FetchApi';
 import { useState } from 'react';
 import imgNotFound from '../../images/imgNotFound.png';
 
-
 export const MovieDetails = () => {
-  const API_KEY = '614b8ef740dcdf4c9fbb2a4f6ff8ca50';
-  const BASE_URL = 'https://api.themoviedb.org/3';
   const [movie, setMovie] = useState(null);
   const { movieId } = useParams();
+  const location = useLocation();
 
   useEffect(() => {
     // loader = true
-    const fetchMovieDetails = async () => {
+    const fetchTrendingMovies = async () => {
       try {
-        const { data } = await axios.get(
-          `${BASE_URL}/movie/${movieId}?api_key=${API_KEY}&language=en-US`
-        );
+        const data = await API.getMovieDetails(movieId);
         setMovie(data);
       } catch (error) {
         console.log(error);
       }
     };
-    fetchMovieDetails();
+    fetchTrendingMovies();
   }, [movieId]);
 
   if (!movie) {
     return null;
   }
 
-  const { genres, vote_average, original_title, overview, poster_path, release_date } = movie;
+  const {
+    genres,
+    vote_average,
+    original_title,
+    overview,
+    poster_path,
+    release_date,
+  } = movie;
 
   const movieGenres = [...genres];
   const movieUserScore = Math.round(vote_average * 10);
 
   return (
     <main>
+      <Link to={location.state?.from ?? '/movies'}>← go back</Link>
       <div style={{ display: 'flex' }}>
         <div>
           <img
@@ -49,8 +53,9 @@ export const MovieDetails = () => {
           />
         </div>
         <div>
-          <h3>{original_title}</h3>
-          <p>{release_date.slice(0, 4)}</p>
+          <h3>
+            {original_title} ({release_date.slice(0, 4)})
+          </h3>
           <p>User Score: {movieUserScore}%</p>
           <h4>Overview</h4>
           <p>{overview}</p>

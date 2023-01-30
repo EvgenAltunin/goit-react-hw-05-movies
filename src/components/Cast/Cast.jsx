@@ -1,23 +1,18 @@
 import { useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import axios from 'axios';
+import * as API from 'components/FetchApi';
 import { useState } from 'react';
 import actorImgNotFound from '../../images/actorImgNotFound.png';
 
 export const Cast = () => {
   const { movieId } = useParams();
-  const API_KEY = '614b8ef740dcdf4c9fbb2a4f6ff8ca50';
-  const BASE_URL = 'https://api.themoviedb.org/3';
-
   const [actors, setActors] = useState(null);
 
   useEffect(() => {
     // loader = true
     const fetchMovieDetails = async () => {
       try {
-        const { data } = await axios.get(
-          `${BASE_URL}/movie/${movieId}/credits?api_key=${API_KEY}&language=en-US`
-        );
+        const data = await API.getMovieCast(movieId);
         setActors(data.cast);
       } catch (error) {
         console.log(error);

@@ -9,24 +9,25 @@ import {
   Input,
 } from 'components/Searchbar/Searchbar.styled';
 
+
 export function Searchbar({ onFormSubmit }) {
-  const [searchQuery, setSearchQuery] = useState('');
+  const [value, setValue] = useState('');
 
   const handleInputValueChange = event => {
-    setSearchQuery(event.currentTarget.value.toLowerCase());
+    setValue(event.currentTarget.value.toLowerCase());
   };
 
   const handleSubmit = event => {
     event.preventDefault();
 
-    if (searchQuery.trim() === '') {
+    if (value.trim() === '') {
       toast.error('Search field must be filled!', { notificationParams });
 
       return;
     }
-    onFormSubmit(searchQuery);
+    onFormSubmit(value);
 
-    setSearchQuery('');
+    setValue('');
   };
 
   return (
@@ -40,7 +41,7 @@ export function Searchbar({ onFormSubmit }) {
           autoComplete="off"
           autoFocus
           placeholder="Search films"
-          value={searchQuery}
+          value={value}
           onChange={handleInputValueChange}
         />
       </Form>

@@ -1,20 +1,17 @@
-import { MovieList } from 'components/MovieList/MovieList';
-// import { getTrendingMovies } from 'components/FetchApi';
+import * as API from 'components/FetchApi';
+import { Link, useLocation } from 'react-router-dom';
 import { useState } from 'react';
 import { useEffect } from 'react';
-import axios from 'axios';
 
 export const Home = () => {
   const [trendingMovies, setTrendingMovies] = useState([]);
-  // const API_KEY = '614b8ef740dcdf4c9fbb2a4f6ff8ca50';
+  const location = useLocation();
+
   useEffect(() => {
     // loader = true
     const fetchTrendingMovies = async () => {
       try {
-        const { data } = await axios.get(
-          `https://api.themoviedb.org/3/trending/movie/day?api_key=614b8ef740dcdf4c9fbb2a4f6ff8ca50`
-        );
-
+        const data = await API.getTrendingMovies();
         setTrendingMovies([...data.results]);
       } catch (error) {
         console.log(error);
@@ -27,7 +24,17 @@ export const Home = () => {
   return (
     <main>
       <h2>Trending today</h2>
-      <MovieList movies={trendingMovies}></MovieList>
+      <ul>
+        {trendingMovies.map(({ id, title }) => {
+          return (
+            <li key={id}>
+              <Link to={`/movies/${id}`} state={{ from: location }}>
+                {title}
+              </Link>
+            </li>
+          );
+        })}
+      </ul>
     </main>
   );
 };
