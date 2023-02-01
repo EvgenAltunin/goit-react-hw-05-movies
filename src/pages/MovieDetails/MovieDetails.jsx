@@ -1,27 +1,41 @@
-import { useEffect } from 'react';
+import { useEffect, Suspense } from 'react';
+import {
+  LinkStyled,
+  Container,
+  ImgWrapper,
+  Image,
+  MainTitle,
+  Title,
+  Genres,
+
+} from 'pages/MovieDetails/MovieDetails.styled';
 import { Link, Outlet, useLocation, useParams } from 'react-router-dom';
 import * as API from 'components/FetchApi';
 import { useState } from 'react';
 import imgNotFound from '../../images/imgNotFound.png';
 import { toast } from 'react-toastify';
 import { notificationParams } from '../../settings/settings';
+import { Loader } from 'components/Loader/Loader';
 
 const MovieDetails = () => {
   const [movie, setMovie] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
   const { movieId } = useParams();
   const location = useLocation();
 
   useEffect(() => {
-    // loader = true
     const fetchTrendingMovies = async () => {
       try {
+        setIsLoading(true);
         const data = await API.getMovieDetails(movieId);
         setMovie(data);
       } catch (error) {
-        console.log(error)
+        console.log(error);
         toast.error(`${error.message}. Try again.`, {
           notificationParams,
         });
+      } finally {
+        setIsLoading(false);
       }
     };
     fetchTrendingMovies();
@@ -44,11 +58,11 @@ const MovieDetails = () => {
   const movieUserScore = Math.round(vote_average * 10);
 
   return (
-    <main>
-      <Link to={location.state?.from ?? '/movies'}>← go back</Link>
+    <Container>
+      <LinkStyled to={location.state?.from ?? '/movies'}>← Go back</LinkStyled>
       <div style={{ display: 'flex' }}>
-        <div>
-          <img
+        <ImgWrapper>
+          <Image
             src={
               poster_path
                 ? 'https://image.tmdb.org/t/p/w300' + poster_path
@@ -56,16 +70,16 @@ const MovieDetails = () => {
             }
             alt={original_title}
           />
-        </div>
+        </ImgWrapper>
         <div>
-          <h3>
+          <MainTitle>
             {original_title} ({release_date.slice(0, 4)})
-          </h3>
+          </MainTitle>
           <p>User Score: {movieUserScore}%</p>
-          <h4>Overview</h4>
+          <Title>Overview</Title>
           <p>{overview}</p>
-          <h4>Genres</h4>
-          <ul>
+          <Title>Genres</Title>
+          <Genres>
             {movieGenres.map(({ id, name }) => {
               return (
                 <li key={id}>
@@ -73,10 +87,10 @@ const MovieDetails = () => {
                 </li>
               );
             })}
-          </ul>
+          </Genres>
         </div>
       </div>
-      <p>Additional information</p>
+      <Title>Additional information</Title>
       <ul>
         <li>
           <Link to={`cast`}>Cast</Link>
@@ -85,8 +99,11 @@ const MovieDetails = () => {
           <Link to={`reviews`}>Reviews</Link>
         </li>
       </ul>
-      <Outlet />
-    </main>
+      {isLoading && <Loader />}
+      <Suspense fallback={<Loader />}>
+        <Outlet />
+      </Suspense>
+    </Container>
   );
 };
 

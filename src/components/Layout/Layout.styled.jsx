@@ -5,7 +5,7 @@ export const Navigation = styled.nav`
     display: flex;
     align-items: center;
     height: 30px;
-    padding: 10px ;
+    padding: 10px 20px 10px 20px ;
     border-bottom: 1px solid black;
 `
 

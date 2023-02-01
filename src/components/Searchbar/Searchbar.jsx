@@ -1,6 +1,7 @@
 import { toast } from 'react-toastify';
 import { notificationParams } from '../../settings/settings';
 import { useState } from 'react';
+import PropTypes from 'prop-types';
 import { ReactComponent as SearchIcon } from '../../icons/search.svg';
 import {
   Search,
@@ -9,7 +10,7 @@ import {
   Input,
 } from 'components/Searchbar/Searchbar.styled';
 
-const Searchbar = ({onFormSubmit}) => {
+const Searchbar = ({ onFormSubmit }) => {
   const [value, setValue] = useState('');
 
   const handleInputValueChange = event => {
@@ -46,6 +47,10 @@ const Searchbar = ({onFormSubmit}) => {
       </Form>
     </Search>
   );
+};
+
+Searchbar.propTypes = {
+  onFormSubmit: PropTypes.func.isRequired,
 };
 
 export default Searchbar;

@@ -1,10 +1,12 @@
 import axios from 'axios';
+import PropTypes from 'prop-types';
+
 const API_KEY = '614b8ef740dcdf4c9fbb2a4f6ff8ca50';
 axios.defaults.baseURL = 'https://api.themoviedb.org/3';
 
 export async function getTrendingMovies() {
-    const response = await axios.get(`/trending/movie/day?api_key=${API_KEY}`);
-    return response.data;
+  const response = await axios.get(`/trending/movie/day?api_key=${API_KEY}`);
+  return response.data;
 }
 
 export async function getMovieByName(query) {
@@ -34,3 +36,16 @@ export async function getMovieReviews(id) {
   );
   return response.data;
 }
+
+getMovieByName.propTypes = {
+  query: PropTypes.string.isRequired
+}
+getMovieDetails.propTypes = {
+  id: PropTypes.number.isRequired
+}
+getMovieCast.propTypes = {
+  id: PropTypes.number.isRequired,
+};
+getMovieReviews.propTypes = {
+  id: PropTypes.number.isRequired,
+};

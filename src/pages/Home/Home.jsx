@@ -1,29 +1,33 @@
 import * as API from 'components/FetchApi';
+import { Container, MainTitle } from 'pages/Home/Home.styled';
 import { Link, useLocation } from 'react-router-dom';
 import { useState } from 'react';
 import { useEffect } from 'react';
+import { Loader } from 'components/Loader/Loader';
 
 export const Home = () => {
   const [trendingMovies, setTrendingMovies] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
   const location = useLocation();
 
   useEffect(() => {
-    // loader = true
+    setIsLoading(true);
     const fetchTrendingMovies = async () => {
       try {
         const data = await API.getTrendingMovies();
         setTrendingMovies([...data.results]);
       } catch (error) {
         console.log(error);
+      } finally {
+        setIsLoading(false);
       }
     };
     fetchTrendingMovies();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
-    <main>
-      <h2>Trending today</h2>
+    <Container>
+      <MainTitle>Trending today</MainTitle>
       <ul>
         {trendingMovies.map(({ id, title }) => {
           return (
@@ -35,6 +39,7 @@ export const Home = () => {
           );
         })}
       </ul>
-    </main>
+      {isLoading && <Loader />}
+    </Container>
   );
 };

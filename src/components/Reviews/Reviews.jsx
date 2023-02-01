@@ -4,15 +4,23 @@ import * as API from 'components/FetchApi';
 import { useState } from 'react';
 import { toast } from 'react-toastify';
 import { notificationParams } from '../../settings/settings';
+import { Loader } from 'components/Loader/Loader';
+import {
+  List,
+  Item,
+  Author,
+  AuthorName,
+} from 'components/Reviews/Reviews.styled';
 
 const Reviews = () => {
   const { movieId } = useParams();
   const [coments, setcoments] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
-    // loader = true
     const fetchMovieDetails = async () => {
       try {
+        setIsLoading(true);
         const data = await API.getMovieReviews(movieId);
         setcoments(data.results);
       } catch (error) {
@@ -20,6 +28,8 @@ const Reviews = () => {
         toast.error(`${error.message}. Try again.`, {
           notificationParams,
         });
+      } finally {
+        setIsLoading(false);
       }
     };
     fetchMovieDetails();
@@ -30,16 +40,26 @@ const Reviews = () => {
   }
 
   return (
-    <ul>
-      {coments.map(({ id, content, author }) => {
-        return (
-          <li key={id}>
-            <p>Author: {author}</p>
-            <p>{content}</p>
-          </li>
-        );
-      })}
-    </ul>
+    <>
+      {coments.length > 0 ? (
+        <List>
+          {coments.map(({ id, content, author }) => {
+            return (
+              <Item key={id}>
+                <Author>
+                  Author: <AuthorName>{author}</AuthorName>
+                </Author>
+                <p>{content}</p>
+              </Item>
+            );
+          })}
+        </List>
+      ) : (
+        <p>We don't have any reviews for this movie.</p>
+      )}
+
+      {isLoading && <Loader />}
+    </>
   );
 };
 

@@ -15,6 +15,7 @@ export const Search = styled.div`
     padding-left: 24px;
     padding-top: 5px;
     padding-bottom: 5px;
+    margin-bottom: 20px;
     color: #fff;
     background-color: #3f51b5;
     box-shadow: 0px 2px 4px -1px rgba(0, 0, 0, 0.2),

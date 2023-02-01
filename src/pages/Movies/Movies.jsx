@@ -7,6 +7,7 @@ import { useSearchParams } from 'react-router-dom';
 import * as API from 'components/FetchApi';
 import { toast } from 'react-toastify';
 import { notificationParams } from '../../settings/settings';
+import { Loader } from 'components/Loader/Loader';
 
 const MovieList = lazy(() => import('components/MovieList/MovieList'));
 const Searchbar = lazy(() => import('components/Searchbar/Searchbar'));
@@ -14,6 +15,7 @@ const Searchbar = lazy(() => import('components/Searchbar/Searchbar'));
 const Movies = () => {
   const [recivedMovies, setRecivedMovies] = useState(null);
   const [searchParams, setSearchParams] = useSearchParams();
+  const [isLoading, setIsLoading] = useState(false);
   const searchQuery = searchParams.get('query') ?? '';
 
   const handleSearchQueryChange = value => {
@@ -27,6 +29,7 @@ const Movies = () => {
 
     const fetchMovieByName = async () => {
       try {
+        setIsLoading(true);
         const data = await API.getMovieByName(searchQuery);
         setRecivedMovies(data.results);
 
@@ -39,6 +42,8 @@ const Movies = () => {
         toast.error(`${error.message}. Try again.`, {
           notificationParams,
         });
+      } finally {
+        setIsLoading(false);
       }
     };
     fetchMovieByName();
@@ -48,6 +53,7 @@ const Movies = () => {
     <main>
       <Searchbar onFormSubmit={handleSearchQueryChange} />
       <MovieList movies={recivedMovies} />
+      {isLoading && <Loader />}
     </main>
   );
 };
